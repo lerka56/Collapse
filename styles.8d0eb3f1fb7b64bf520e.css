@@ -1,0 +1,170 @@
+
+.collapse-container {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.collapse-container:hover {
+    border-color: #cbd5e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.collapse-container.active {
+    border-color: #4299e1;
+    box-shadow: 0 10px 25px rgba(66, 153, 225, 0.15);
+}
+
+.collapse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    background: #f7fafc;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+    text-align: left;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.collapse-header:hover {
+    background: #edf2f7;
+}
+
+.collapse-header:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.collapse-header.active {
+    background: #ebf8ff;
+    border-bottom-color: #bee3f8;
+    color: #2c5282;
+}
+
+.collapse-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.collapse-title i {
+    color: #4299e1;
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.collapse-header.active .collapse-title i {
+    transform: rotate(90deg);
+}
+
+.collapse-arrow {
+    color: #718096;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.collapse-arrow.active {
+    transform: rotate(180deg);
+    color: #4299e1;
+}
+
+.collapse-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-content.active {
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-body {
+    padding: 24px;
+    color: #4a5568;
+    line-height: 1.7;
+    font-size: 16px;
+    background: white;
+}
+
+/* Стили для текста как на изображении */
+.collapse-text {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #2d3748;
+}
+
+.collapse-text p {
+    margin-bottom: 12px;
+}
+
+.collapse-line {
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Анимация появления текста */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.collapse-content.active .collapse-body {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .collapse-header {
+        padding: 16px 20px;
+        font-size: 16px;
+    }
+    
+    .collapse-body {
+        padding: 20px;
+    }
+    
+    .collapse-text {
+        font-size: 16px;
+    }
+}
+
+/* Эффект нажатия */
+.collapse-header:active {
+    transform: translateY(1px);
+}
+
+/* Плавный скролл для навигации по клавиатуре */
+.collapse-header:focus-visible {
+    outline: 2px solid #4299e1;
+    outline-offset: 2px;
+}
+
+/* Улучшенная анимация для стрелки */
+.collapse-arrow i {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+
+.demo-text {
+    font-style: italic;
+    color: #4a5568;
+    border-left: 3px solid #4299e1;
+    padding-left: 16px;
+    margin-left: 8px;
+}
