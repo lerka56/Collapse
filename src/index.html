@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapse Widget</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .widget-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .widget-subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        /* Стили для Collapse виджета */
+        .collapse-container {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .collapse-container.active {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #4299e1;
+        }
+        
+        .collapse-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            background: #f7fafc;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: left;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .collapse-header:hover {
+            background: #edf2f7;
+        }
+        
+        .collapse-header:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+        
+        .collapse-header.active {
+            background: #ebf8ff;
+            border-bottom-color: #bee3f8;
+            color: #2c5282;
+        }
+        
+        .collapse-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .collapse-title i {
+            color: #4299e1;
+            font-size: 20px;
+        }
+        
+        .collapse-arrow {
+            color: #718096;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        
+        .collapse-arrow.active {
+            transform: rotate(180deg);
+            color: #4299e1;
+        }
+        
+        .collapse-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapse-content.active {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .collapse-body {
+            padding: 24px;
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .collapse-body p {
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+        
+        .collapse-body p:last-child {
+            margin-bottom: 0;
+        }
+        
+    
+        .text-content {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #2d3748;
+        }
+        
+        .text-content p {
+            margin-bottom: 12px;
+        }
+        
+        .text-line {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .badge {
+            background: #4299e1;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge.pure {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .badge.js {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+        
+        @media (max-width: 768px) {
+            .widget-wrapper {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .collapse-header {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+            
+            .collapse-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="widget-wrapper">
+            <h1>Collapse Widget</h1>
+            
+            
+            <!-- Основной Collapse виджет -->
+            <div class="collapse-container" id="mainCollapse">
+                <button class="collapse-header" id="collapseBtn">
+                    <div class="collapse-title">
+                        <i class="fas fa-angle-down"></i>
+                        <span>Collapse</span>
+                    </div>
+                    <div class="collapse-arrow" id="collapseArrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </button>
+                <div class="collapse-content" id="collapseContent">
+                    <div class="collapse-body">
+                        <div class="text-content">
+                            <p>
+                                <span class="text-line">Anim pariatur cliche reprehenderit, enim eiusmod high life</span>
+                                <span class="text-line">accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica,</span>
+                                <span class="text-line">craft beer labore wes anderson cred nesciunt sapiente ea proident.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        
+    
+    <script>
+        // Простой и чистый JavaScript для Collapse виджета
+        document.addEventListener('DOMContentLoaded', function() {
+            const collapseBtn = document.getElementById('collapseBtn');
+            const collapseContent = document.getElementById('collapseContent');
+            const collapseArrow = document.getElementById('collapseArrow');
+            const collapseContainer = document.getElementById('mainCollapse');
+            
+            let isOpen = false;
+            
+            function toggleCollapse() {
+                if (isOpen) {
+                    // Закрываем
+                    collapseContent.style.maxHeight = collapseContent.scrollHeight + 'px';
+                    
+                    setTimeout(() => {
+                        collapseContent.style.maxHeight = '0';
+                        collapseContent.classList.remove('active');
+                        collapseBtn.classList.remove('active');
+                        collapseArrow.classList.remove('active');
+                        collapseContainer.classList.remove('active');
+                        
+                        // ARIA атрибуты
+                        collapseBtn.setAttribute('aria-expanded', 'false');
+                        collapseContent.setAttribute('aria-hidden', 'true');
+                    }, 10);
+                } else {
+                    // Открываем
+                    collapseContent.classList.add('active');
+                    collapseBtn.classList.add('active');
+                    collapseArrow.classList.add('active');
+                    collapseContainer.classList.add('active');
+                    
+                    // Устанавливаем финальную высоту
+                    const contentHeight = collapseContent.scrollHeight;
+                    collapseContent.style.maxHeight = contentHeight + 'px';
+                    
+                    // ARIA атрибуты
+                    collapseBtn.setAttribute('aria-expanded', 'true');
+                    collapseContent.setAttribute('aria-hidden', 'false');
+                    
+                    // После завершения анимации убираем фиксированную высоту
+                    setTimeout(() => {
+                        if (collapseContent.style.maxHeight !== '0px') {
+                            collapseContent.style.maxHeight = 'none';
+                        }
+                    }, 500);
+                }
+                
+                isOpen = !isOpen;
+            }
+            
+            // Инициализация ARIA атрибутов
+            collapseBtn.setAttribute('aria-expanded', 'false');
+            collapseBtn.setAttribute('aria-controls', 'collapseContent');
+            collapseContent.setAttribute('aria-labelledby', 'collapseBtn');
+            collapseContent.setAttribute('aria-hidden', 'true');
+            
+            // Обработчик клика
+            collapseBtn.addEventListener('click', toggleCollapse);
+            
+            // Поддержка клавиатуры
+            collapseBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleCollapse();
+                }
+            });
+            
+            // Автоматически открываем виджет при загрузке для демонстрации
+            setTimeout(() => {
+                if (!isOpen) {
+                    toggleCollapse();
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html>
