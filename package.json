@@ -6,7 +6,7 @@
     "scripts": {
       "start": "webpack serve --mode development --open",
       "build": "webpack --mode production",
-      "postbuild": "touch dist/.nojekyll && echo '.nojekyll created'"
+      "postbuild": "touch dist/.nojekyll && echo 'GitHub Pages: Jekyll disabled' > dist/.nojekyll"
     },
     "keywords": ["collapsible", "accordion", "javascript", "widget"],
     "author": "",

@@ -26,11 +26,14 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Add .nojekyll file
-        run: touch dist/.nojekyll
-      
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: dist
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          # Ключевая настройка - создаем чистую ветку
+          force_orphan: true
+          # Отключаем Jekyll
+          cname: ""
+          enable_jekyll: false
