@@ -6,7 +6,7 @@
     "scripts": {
       "start": "webpack serve --mode development --open",
       "build": "webpack --mode production",
-      "deploy": "gh-pages -d dist"
+      "postbuild": "touch dist/.nojekyll && echo '.nojekyll created'"
     },
     "keywords": ["collapsible", "accordion", "javascript", "widget"],
     "author": "",
