@@ -12,6 +12,7 @@ class CollapseWidget {
         
         this.config = { ...this.defaults, ...options };
         this.instances = [];
+        this.activeInstance = null;
         this.init();
     }
     
@@ -91,72 +92,88 @@ class CollapseWidget {
         if (instance.isOpen) {
             this.close(instance);
         } else {
-            if (!this.config.multiple) {
-                this.closeAll();
-            }
             this.open(instance);
         }
     }
     
     open(instance) {
+        // Закрываем активный виджет если не разрешено множественное открытие
+        if (!this.config.multiple && this.activeInstance && this.activeInstance !== instance) {
+            this.close(this.activeInstance);
+        }
+        
         const { container, header, content, arrow } = instance;
         
-        // Добавляем активные классы
-        container.classList.add(this.config.activeClass);
-        header.classList.add(this.config.activeClass);
-        if (arrow) arrow.classList.add(this.config.activeClass);
-        content.classList.add(this.config.activeClass);
-        
-        // Вычисляем высоту контента
-        const contentHeight = content.scrollHeight;
-        
-        // Устанавливаем начальную высоту
-        content.style.maxHeight = '0px';
-        
         // Анимация открытия
-        setTimeout(() => {
-            content.style.maxHeight = `${contentHeight}px`;
-        }, 10);
+        const startAnimation = () => {
+            content.style.maxHeight = '0px';
+            
+            requestAnimationFrame(() => {
+                const contentHeight = content.scrollHeight;
+                content.style.maxHeight = `${contentHeight}px`;
+                
+                // Добавляем активные классы
+                container.classList.add(this.config.activeClass);
+                header.classList.add(this.config.activeClass);
+                if (arrow) arrow.classList.add(this.config.activeClass);
+                content.classList.add(this.config.activeClass);
+                
+                // Обновляем ARIA
+                header.setAttribute('aria-expanded', 'true');
+                content.setAttribute('aria-hidden', 'false');
+                
+                instance.isOpen = true;
+                this.activeInstance = instance;
+                
+                // После анимации убираем фиксированную высоту
+                setTimeout(() => {
+                    if (content.style.maxHeight !== '0px') {
+                        content.style.maxHeight = 'none';
+                    }
+                }, this.config.duration);
+            });
+        };
         
-        // Обновляем ARIA
-        header.setAttribute('aria-expanded', 'true');
-        content.setAttribute('aria-hidden', 'false');
-        
-        instance.isOpen = true;
-        
-        // После анимации убираем фиксированную высоту
-        setTimeout(() => {
-            if (content.style.maxHeight !== '0px') {
-                content.style.maxHeight = 'none';
-            }
-        }, this.config.duration);
+        // Если контент уже имеет высоту, сначала сбрасываем
+        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+            content.style.maxHeight = `${content.scrollHeight}px`;
+            setTimeout(startAnimation, 10);
+        } else {
+            startAnimation();
+        }
     }
     
     close(instance) {
         const { container, header, content, arrow } = instance;
         
-        // Сохраняем текущую высоту
-        const contentHeight = content.scrollHeight;
-        content.style.maxHeight = `${contentHeight}px`;
-        
         // Анимация закрытия
-        setTimeout(() => {
-            content.style.maxHeight = '0px';
+        const startAnimation = () => {
+            const contentHeight = content.scrollHeight;
+            content.style.maxHeight = `${contentHeight}px`;
             
-            setTimeout(() => {
-                // Убираем активные классы
-                container.classList.remove(this.config.activeClass);
-                header.classList.remove(this.config.activeClass);
-                if (arrow) arrow.classList.remove(this.config.activeClass);
-                content.classList.remove(this.config.activeClass);
+            requestAnimationFrame(() => {
+                content.style.maxHeight = '0px';
                 
-                // Обновляем ARIA
-                header.setAttribute('aria-expanded', 'false');
-                content.setAttribute('aria-hidden', 'true');
-                
-                instance.isOpen = false;
-            }, this.config.duration);
-        }, 10);
+                setTimeout(() => {
+                    // Убираем активные классы
+                    container.classList.remove(this.config.activeClass);
+                    header.classList.remove(this.config.activeClass);
+                    if (arrow) arrow.classList.remove(this.config.activeClass);
+                    content.classList.remove(this.config.activeClass);
+                    
+                    // Обновляем ARIA
+                    header.setAttribute('aria-expanded', 'false');
+                    content.setAttribute('aria-hidden', 'true');
+                    
+                    instance.isOpen = false;
+                    if (this.activeInstance === instance) {
+                        this.activeInstance = null;
+                    }
+                }, this.config.duration);
+            });
+        };
+        
+        startAnimation();
     }
     
     closeAll() {
@@ -174,36 +191,13 @@ class CollapseWidget {
             }
         });
     }
-    
-    openById(id) {
-        const instance = this.instances.find(inst => inst.id === id);
-        if (instance && !instance.isOpen) {
-            this.open(instance);
-        }
-    }
-    
-    closeById(id) {
-        const instance = this.instances.find(inst => inst.id === id);
-        if (instance && instance.isOpen) {
-            this.close(instance);
-        }
-    }
-    
-    destroy() {
-        this.instances.forEach(instance => {
-            const { header } = instance;
-            header.removeEventListener('click', this.toggle);
-            header.removeEventListener('keydown', this.handleKeydown);
-        });
-        this.instances = [];
-    }
 }
 
 // Автоматическая инициализация
 document.addEventListener('DOMContentLoaded', () => {
     window.collapseWidget = new CollapseWidget({
-        multiple: true,
-        initOpen: false
+        multiple: false, // Только один открытый виджет
+        initOpen: true // Открыть первый при загрузке
     });
 });
 

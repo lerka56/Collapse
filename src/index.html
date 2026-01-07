@@ -59,11 +59,14 @@
             overflow: hidden;
             margin-bottom: 20px;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
         
         .collapse-container.active {
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             border-color: #4299e1;
+            z-index: 2;
         }
         
         .collapse-header {
@@ -81,6 +84,7 @@
             text-align: left;
             transition: all 0.2s ease;
             border-bottom: 1px solid #e2e8f0;
+            position: relative;
         }
         
         .collapse-header:hover {
@@ -141,14 +145,12 @@
         
         .collapse-body p {
             margin-bottom: 16px;
-            font-style: italic;
         }
         
         .collapse-body p:last-child {
             margin-bottom: 0;
         }
         
-    
         .text-content {
             font-family: Georgia, 'Times New Roman', Times, serif;
             font-size: 17px;
@@ -164,7 +166,6 @@
             display: block;
             margin-bottom: 8px;
         }
-        
         
         .badges {
             display: flex;
@@ -190,6 +191,50 @@
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
         }
         
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-close-all {
+            background: #f56565;
+        }
+        
+        .btn-close-all:hover {
+            background: #e53e3e;
+        }
+        
+        .btn-open-all {
+            background: #48bb78;
+        }
+        
+        .btn-open-all:hover {
+            background: #38a169;
+        }
+        
         @media (max-width: 768px) {
             .widget-wrapper {
                 padding: 20px;
@@ -207,6 +252,10 @@
             .collapse-body {
                 padding: 20px;
             }
+            
+            .controls {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -214,20 +263,25 @@
     <div class="container">
         <div class="widget-wrapper">
             <h1>Collapse Widget</h1>
+            <p class="widget-subtitle">На чистом JavaScript без зависимостей</p>
             
+            <div class="controls">
+                <button class="btn btn-open-all" id="openAllBtn">Открыть все</button>
+                <button class="btn btn-close-all" id="closeAllBtn">Закрыть все</button>
+            </div>
             
-            <!-- Основной Collapse виджет -->
-            <div class="collapse-container" id="mainCollapse">
-                <button class="collapse-header" id="collapseBtn">
+            <!-- Collapse виджет 1 -->
+            <div class="collapse-container" id="collapse1">
+                <button class="collapse-header" data-collapse-target="collapse1">
                     <div class="collapse-title">
-                        <i class="fas fa-angle-down"></i>
-                        <span>Collapse</span>
+                        <i class="fas fa-info-circle"></i>
+                        <span>Основная информация</span>
                     </div>
-                    <div class="collapse-arrow" id="collapseArrow">
+                    <div class="collapse-arrow">
                         <i class="fas fa-chevron-down"></i>
                     </div>
                 </button>
-                <div class="collapse-content" id="collapseContent">
+                <div class="collapse-content">
                     <div class="collapse-body">
                         <div class="text-content">
                             <p>
@@ -235,88 +289,257 @@
                                 <span class="text-line">accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica,</span>
                                 <span class="text-line">craft beer labore wes anderson cred nesciunt sapiente ea proident.</span>
                             </p>
+                            <p>
+                                <span class="text-line">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+                                <span class="text-line">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
             
-        
-    
+            <!-- Collapse виджет 2 -->
+            <div class="collapse-container" id="collapse2">
+                <button class="collapse-header" data-collapse-target="collapse2">
+                    <div class="collapse-title">
+                        <i class="fas fa-code"></i>
+                        <span>Технические детали</span>
+                    </div>
+                    <div class="collapse-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </button>
+                <div class="collapse-content">
+                    <div class="collapse-body">
+                        <div class="text-content">
+                            <p>
+                                <span class="text-line">Виджет реализован на чистом JavaScript без зависимостей.</span>
+                                <span class="text-line">Использует современные методы DOM API, включая метод append.</span>
+                                <span class="text-line">Поддерживает клавиатурную навигацию и ARIA атрибуты.</span>
+                            </p>
+                            <p>
+                                <span class="text-line">Анимация выполняется с помощью CSS transitions.</span>
+                                <span class="text-line">Виджеты не перекрываются - активный всегда поверх остальных.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collapse виджет 3 -->
+            <div class="collapse-container" id="collapse3">
+                <button class="collapse-header" data-collapse-target="collapse3">
+                    <div class="collapse-title">
+                        <i class="fas fa-cogs"></i>
+                        <span>Функциональность</span>
+                    </div>
+                    <div class="collapse-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </button>
+                <div class="collapse-content">
+                    <div class="collapse-body">
+                        <div class="text-content">
+                            <p>
+                                <span class="text-line">При клике на один виджет, другие автоматически закрываются.</span>
+                                <span class="text-line">Поддержка открытия/закрытия всех виджетов одновременно.</span>
+                                <span class="text-line">Плавные анимации открытия и закрытия.</span>
+                            </p>
+                            <p>
+                                <span class="text-line">Адаптивный дизайн для мобильных устройств.</span>
+                                <span class="text-line">Доступность для скринридеров и клавиатурной навигации.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="badges">
+                <span class="badge pure">Pure JavaScript</span>
+                <span class="badge js">No Dependencies</span>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Простой и чистый JavaScript для Collapse виджета
         document.addEventListener('DOMContentLoaded', function() {
-            const collapseBtn = document.getElementById('collapseBtn');
-            const collapseContent = document.getElementById('collapseContent');
-            const collapseArrow = document.getElementById('collapseArrow');
-            const collapseContainer = document.getElementById('mainCollapse');
-            
-            let isOpen = false;
-            
-            function toggleCollapse() {
-                if (isOpen) {
-                    // Закрываем
-                    collapseContent.style.maxHeight = collapseContent.scrollHeight + 'px';
-                    
-                    setTimeout(() => {
-                        collapseContent.style.maxHeight = '0';
-                        collapseContent.classList.remove('active');
-                        collapseBtn.classList.remove('active');
-                        collapseArrow.classList.remove('active');
-                        collapseContainer.classList.remove('active');
-                        
-                        // ARIA атрибуты
-                        collapseBtn.setAttribute('aria-expanded', 'false');
-                        collapseContent.setAttribute('aria-hidden', 'true');
-                    }, 10);
-                } else {
-                    // Открываем
-                    collapseContent.classList.add('active');
-                    collapseBtn.classList.add('active');
-                    collapseArrow.classList.add('active');
-                    collapseContainer.classList.add('active');
-                    
-                    // Устанавливаем финальную высоту
-                    const contentHeight = collapseContent.scrollHeight;
-                    collapseContent.style.maxHeight = contentHeight + 'px';
-                    
-                    // ARIA атрибуты
-                    collapseBtn.setAttribute('aria-expanded', 'true');
-                    collapseContent.setAttribute('aria-hidden', 'false');
-                    
-                    // После завершения анимации убираем фиксированную высоту
-                    setTimeout(() => {
-                        if (collapseContent.style.maxHeight !== '0px') {
-                            collapseContent.style.maxHeight = 'none';
-                        }
-                    }, 500);
+            class CollapseWidget {
+                constructor() {
+                    this.collapses = [];
+                    this.activeCollapse = null;
+                    this.init();
                 }
                 
-                isOpen = !isOpen;
+                init() {
+                    this.setupCollapses();
+                    this.setupControls();
+                    this.setupAccessibility();
+                }
+                
+                setupCollapses() {
+                    const containers = document.querySelectorAll('.collapse-container');
+                    
+                    containers.forEach((container, index) => {
+                        const header = container.querySelector('.collapse-header');
+                        const content = container.querySelector('.collapse-content');
+                        const arrow = container.querySelector('.collapse-arrow');
+                        const id = container.id;
+                        
+                        const collapse = {
+                            container,
+                            header,
+                            content,
+                            arrow,
+                            id,
+                            isOpen: false
+                        };
+                        
+                        // Инициализация ARIA
+                        header.setAttribute('aria-expanded', 'false');
+                        header.setAttribute('aria-controls', `${id}-content`);
+                        content.setAttribute('id', `${id}-content`);
+                        content.setAttribute('aria-labelledby', `${id}-header`);
+                        content.setAttribute('aria-hidden', 'true');
+                        
+                        // Обработчик клика
+                        header.addEventListener('click', () => this.toggle(collapse));
+                        
+                        // Обработчик клавиатуры
+                        header.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.toggle(collapse);
+                            }
+                        });
+                        
+                        this.collapses.push(collapse);
+                    });
+                }
+                
+                setupControls() {
+                    const openAllBtn = document.getElementById('openAllBtn');
+                    const closeAllBtn = document.getElementById('closeAllBtn');
+                    
+                    if (openAllBtn) {
+                        openAllBtn.addEventListener('click', () => this.openAll());
+                    }
+                    
+                    if (closeAllBtn) {
+                        closeAllBtn.addEventListener('click', () => this.closeAll());
+                    }
+                }
+                
+                setupAccessibility() {
+                    // Добавляем уникальные id для заголовков
+                    this.collapses.forEach(collapse => {
+                        const headerId = `${collapse.id}-header`;
+                        collapse.header.id = headerId;
+                        collapse.content.setAttribute('aria-labelledby', headerId);
+                    });
+                }
+                
+                toggle(collapse) {
+                    if (collapse.isOpen) {
+                        this.close(collapse);
+                    } else {
+                        this.open(collapse);
+                    }
+                }
+                
+                open(collapse) {
+                    // Закрываем открытый виджет если есть
+                    if (this.activeCollapse && this.activeCollapse !== collapse) {
+                        this.close(this.activeCollapse);
+                    }
+                    
+                    const { container, header, content, arrow } = collapse;
+                    
+                    // Анимация открытия
+                    content.style.maxHeight = '0px';
+                    
+                    requestAnimationFrame(() => {
+                        const contentHeight = content.scrollHeight;
+                        content.style.maxHeight = `${contentHeight}px`;
+                        
+                        // Добавляем классы
+                        container.classList.add('active');
+                        header.classList.add('active');
+                        arrow.classList.add('active');
+                        content.classList.add('active');
+                        
+                        // Обновляем состояние
+                        collapse.isOpen = true;
+                        this.activeCollapse = collapse;
+                        
+                        // ARIA атрибуты
+                        header.setAttribute('aria-expanded', 'true');
+                        content.setAttribute('aria-hidden', 'false');
+                        
+                        // После анимации убираем фиксированную высоту
+                        setTimeout(() => {
+                            if (content.style.maxHeight !== '0px') {
+                                content.style.maxHeight = 'none';
+                            }
+                        }, 500);
+                    });
+                }
+                
+                close(collapse) {
+                    const { container, header, content, arrow } = collapse;
+                    
+                    // Сохраняем текущую высоту
+                    const contentHeight = content.scrollHeight;
+                    content.style.maxHeight = `${contentHeight}px`;
+                    
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '0px';
+                        
+                        setTimeout(() => {
+                            // Убираем классы
+                            container.classList.remove('active');
+                            header.classList.remove('active');
+                            arrow.classList.remove('active');
+                            content.classList.remove('active');
+                            
+                            // Обновляем состояние
+                            collapse.isOpen = false;
+                            if (this.activeCollapse === collapse) {
+                                this.activeCollapse = null;
+                            }
+                            
+                            // ARIA атрибуты
+                            header.setAttribute('aria-expanded', 'false');
+                            content.setAttribute('aria-hidden', 'true');
+                        }, 300);
+                    });
+                }
+                
+                openAll() {
+                    this.collapses.forEach(collapse => {
+                        if (!collapse.isOpen) {
+                            this.open(collapse);
+                        }
+                    });
+                }
+                
+                closeAll() {
+                    this.collapses.forEach(collapse => {
+                        if (collapse.isOpen) {
+                            this.close(collapse);
+                        }
+                    });
+                }
             }
             
-            // Инициализация ARIA атрибутов
-            collapseBtn.setAttribute('aria-expanded', 'false');
-            collapseBtn.setAttribute('aria-controls', 'collapseContent');
-            collapseContent.setAttribute('aria-labelledby', 'collapseBtn');
-            collapseContent.setAttribute('aria-hidden', 'true');
+            // Инициализация виджета
+            window.collapseWidget = new CollapseWidget();
             
-            // Обработчик клика
-            collapseBtn.addEventListener('click', toggleCollapse);
-            
-            // Поддержка клавиатуры
-            collapseBtn.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleCollapse();
-                }
-            });
-            
-            // Автоматически открываем виджет при загрузке для демонстрации
+            // Открываем первый виджет для демонстрации
             setTimeout(() => {
-                if (!isOpen) {
-                    toggleCollapse();
+                if (window.collapseWidget.collapses[0]) {
+                    window.collapseWidget.open(window.collapseWidget.collapses[0]);
                 }
-            }, 300);
+            }, 500);
         });
     </script>
 </body>
